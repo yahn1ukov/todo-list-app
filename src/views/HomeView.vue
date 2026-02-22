@@ -46,7 +46,7 @@ function onModalOpen(todo?: ITodo) {
       </template>
     </TodoList>
 
-    <p v-else class="mt-4 text-center font-medium">No todo found for this filter</p>
+    <p v-else class="mt-4 text-center font-medium">No todo found</p>
   </div>
 
   <Modal :todo="selectedTodo" v-model="isModalOpen" />

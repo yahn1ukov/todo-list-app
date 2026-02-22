@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { Pencil } from 'lucide-vue-next'
+import { Pencil, Search, XCircleIcon } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 
 import { FILTER_TYPE, SORT_TYPE } from '@/lib/constants.ts'
 import { useTodoStore } from '@/stores/todo'
 
 import { Button } from '@/components/ui/button'
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -18,7 +19,7 @@ interface IEmits {
 defineEmits<IEmits>()
 
 const store = useTodoStore()
-const { filter, sort } = storeToRefs(store)
+const { filter, sort, search } = storeToRefs(store)
 </script>
 
 <template>
@@ -30,6 +31,18 @@ const { filter, sort } = storeToRefs(store)
         </TabsTrigger>
       </TabsList>
     </Tabs>
+
+    <InputGroup class="w-65">
+      <InputGroupInput v-model="search" placeholder="Search..." />
+      <InputGroupAddon>
+        <Search />
+      </InputGroupAddon>
+      <InputGroupAddon v-if="search" align="inline-end">
+        <InputGroupButton class="rounded-full" size="icon-xs" @click="search = ''">
+          <XCircleIcon />
+        </InputGroupButton>
+      </InputGroupAddon>
+    </InputGroup>
 
     <div class="flex gap-4">
       <Select :model-value="sort" @update:model-value="sort = $event as TSortType">

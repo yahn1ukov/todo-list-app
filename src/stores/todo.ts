@@ -1,6 +1,6 @@
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { FILTER_TYPE, LOCAL_STORAGE_KEY, PINIA_STORE_KEY, PRIORITY_ORDER, SORT_TYPE } from '@/lib/constants.ts'
 
@@ -9,6 +9,7 @@ import type { ITodo, TCreateTodoPayload, TFilterType, TSortType, TUpdateTodoPayl
 export const useTodoStore = defineStore(PINIA_STORE_KEY.TODO, () => {
   const filter = useLocalStorage<TFilterType>(LOCAL_STORAGE_KEY.FILTER, FILTER_TYPE.ALL)
   const sort = useLocalStorage<TSortType>(LOCAL_STORAGE_KEY.SORT, SORT_TYPE.CREATED)
+  const search = ref<string>('')
 
   const todo = useLocalStorage<ITodo[]>(LOCAL_STORAGE_KEY.TODO, [], {
     serializer: {
@@ -34,7 +35,16 @@ export const useTodoStore = defineStore(PINIA_STORE_KEY.TODO, () => {
         ? unarchivedTodo
         : unarchivedTodo.filter((t) => (filter.value === FILTER_TYPE.COMPLETED ? t.isCompleted : !t.isCompleted))
 
-    return [...filteredTodo].sort((a: ITodo, b: ITodo) => {
+    const searchedTodo = filteredTodo.filter((t) => {
+      const query = search.value.toLowerCase().trim()
+      if (!query) {
+        return true
+      }
+
+      return t.title.toLowerCase().includes(query) || t.description?.toLowerCase().includes(query)
+    })
+
+    return [...searchedTodo].sort((a: ITodo, b: ITodo) => {
       switch (sort.value) {
         case SORT_TYPE.PRIORITY:
           return PRIORITY_ORDER[b.priority] - PRIORITY_ORDER[a.priority]
@@ -93,6 +103,7 @@ export const useTodoStore = defineStore(PINIA_STORE_KEY.TODO, () => {
   return {
     filter,
     sort,
+    search,
     totalCount,
     sortedTodo,
     archivedTodo,
