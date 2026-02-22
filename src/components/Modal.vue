@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-import type { ITodo, TCreateTodoPayload, TPriorityType } from '@/lib/types'
+import type { ITodo, TCreateTodoPayload } from '@/lib/types'
 
 interface IProps {
   todo?: ITodo
@@ -67,8 +67,7 @@ function submit() {
 
           <div class="grid gap-3">
             <Label for="priority">Priority</Label>
-            <Select id="priority" :model-value="form.priority"
-              @update:model-value="form.priority = $event as TPriorityType">
+            <Select id="priority" v-model="form.priority">
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
