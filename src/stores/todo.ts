@@ -2,7 +2,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
 
-import { FILTER_TYPE, LOCAL_STORAGE_KEY, PINIA_STORE_KEY, SORT_TYPE } from '@/lib/constants.ts'
+import { FILTER_TYPE, LOCAL_STORAGE_KEY, PINIA_STORE_KEY, PRIORITY_ORDER, SORT_TYPE } from '@/lib/constants.ts'
 
 import type { ITodo, TCreateTodoPayload, TFilterType, TSortType, TUpdateTodoPayload } from '@/lib/types'
 
@@ -35,11 +35,14 @@ export const useTodoStore = defineStore(PINIA_STORE_KEY.TODO, () => {
         : unarchivedTodo.filter((t) => (filter.value === FILTER_TYPE.COMPLETED ? t.isCompleted : !t.isCompleted))
 
     return [...filteredTodo].sort((a: ITodo, b: ITodo) => {
-      if (sort.value === SORT_TYPE.ALPHABETICAL) {
-        return a.title.localeCompare(b.title)
+      switch (sort.value) {
+        case SORT_TYPE.PRIORITY:
+          return PRIORITY_ORDER[b.priority] - PRIORITY_ORDER[a.priority]
+        case SORT_TYPE.ALPHABETICAL:
+          return a.title.localeCompare(b.title)
+        default:
+          return b.createdAt.getTime() - a.createdAt.getTime()
       }
-
-      return b.createdAt.getTime() - a.createdAt.getTime()
     })
   })
 

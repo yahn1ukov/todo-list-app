@@ -4,6 +4,7 @@ import { Archive, ArchiveXIcon, Check, Ellipsis, Pencil, Trash, X } from 'lucide
 
 import { useTodoStore } from '@/stores/todo'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -103,9 +104,11 @@ const store = useTodoStore()
       </TooltipProvider>
     </ItemActions>
 
-    <ItemFooter class="justify-end gap-2 text-muted-foreground">
+    <ItemFooter class="justify-between gap-2 text-muted-foreground">
+      <Badge variant="outline">{{ todo.priority }}</Badge>
+
       <p v-if="!todo.updatedAt">created {{ formatTimeAgo(todo.createdAt) }}</p>
-      <p v-else>updated {{ formatTimeAgo(todo.updatedAt) }}</p>
+      <p v-else>edited {{ formatTimeAgo(todo.updatedAt) }}</p>
     </ItemFooter>
   </Item>
 </template>
