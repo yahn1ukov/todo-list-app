@@ -27,18 +27,15 @@ const form = ref<TCreateTodoPayload>({
   priority: PRIORITY_TYPE.LOW,
 })
 
-watch(
-  isOpen,
-  (isModalOpened) => {
-    if (isModalOpened) {
-      form.value = {
-        title: props.todo?.title ?? '',
-        description: props.todo?.description ?? '',
-        priority: props.todo?.priority ?? PRIORITY_TYPE.LOW,
-      }
+watch(isOpen, (isModalOpened) => {
+  if (isModalOpened) {
+    form.value = {
+      title: props.todo?.title ?? '',
+      description: props.todo?.description ?? '',
+      priority: props.todo?.priority ?? PRIORITY_TYPE.LOW,
     }
   }
-)
+})
 
 function submit() {
   if (props.todo) {
@@ -87,14 +84,10 @@ function submit() {
 
         <DialogFooter>
           <DialogClose as-child>
-            <Button variant="outline">
-              Cancel
-            </Button>
+            <Button variant="outline"> Cancel </Button>
           </DialogClose>
 
-          <Button type="submit">
-            Save
-          </Button>
+          <Button type="submit"> Save </Button>
         </DialogFooter>
       </form>
     </DialogContent>
